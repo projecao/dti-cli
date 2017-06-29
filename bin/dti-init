@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var download = require('download-git-repo')
 var program = require('commander')
 var exists = require('fs').existsSync
 var path = require('path')
@@ -106,11 +105,20 @@ if (exists(to)) {
  */
 
 function run () {
-  // check if template is local
-  if (isLocalPath(template)) {
-    var templatePath = getTemplatePath(template)
+
+  checkVersion(function () {
+    
+    var spinner = ora('downloading template from DTI')
+    spinner.start()
+
+    // use official templates
+    var officialTemplate = 'file:\\gates\\DTI\\Desenvolvimento\\' + template
+    var templatePath = getTemplatePath(officialTemplate)
+
+    console.log( templatePath )
     if (exists(templatePath)) {
       generate(name, templatePath, to, function (err) {
+        spinner.stop()
         if (err) logger.fatal(err)
         console.log()
         logger.success('Generated "%s".', name)
@@ -118,54 +126,7 @@ function run () {
     } else {
       logger.fatal('Local template "%s" not found.', template)
     }
-  } else {
-    checkVersion(function () {
-      if (!hasSlash) {
-        // use official templates
-        var officialTemplate = 'github:'+ packageConfig.git.user +'/' + template
-        if (template.indexOf('#') !== -1) {
-          downloadAndGenerate(officialTemplate)
-        } else {
-          if (template.indexOf('-2.0') !== -1) {
-            warnings.v2SuffixTemplatesDeprecated(template, inPlace ? '' : name)
-            return
-          }
-
-          // warnings.v2BranchIsNowDefault(template, inPlace ? '' : name)
-          downloadAndGenerate(officialTemplate)
-        }
-      } else {
-        downloadAndGenerate(template)
-      }
-    })
-  }
-}
-
-/**
- * Download a generate from a template repo.
- *
- * @param {String} template
- */
-
-function downloadAndGenerate (template) {
-  var spinner = ora('downloading template from DTI')
-  spinner.start()
-  // Remove if local template exists
-  if (exists(tmp)) rm(tmp)
-  
-  try {
     
-    download(template, tmp, { clone: clone }, function (err) {
-      spinner.stop()
-      if (err) logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
-      generate(name, tmp, to, function (err) {
-        if (err) logger.fatal(err)
-        console.log()
-        logger.success('Generated "%s".', name)
-      })
-    })
-
-  } catch (err) {
-    console.log(err)
-  }
+  })
+  
 }
