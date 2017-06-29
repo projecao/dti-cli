@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
 var packageConfig = require('../package.json')
+var list = require('list-dir')
 var logger = require('../lib/logger')
-var request = require('request')
 var chalk = require('chalk')
+var fs = require('fs')
+var path = require('path')
 
 /**
  * Padding.
@@ -17,17 +19,23 @@ process.on('exit', function () {
 /**
  * List repos.
  */
+function request (src, done) {
+  return fs.readdir(src, function (err, files) {
+    var dirs = files.filter(file => fs.lstatSync(path.join(src, file)).isDirectory())
 
-request({
-  url: 'https://api.github.com/users/' + packageConfig.git.user + '/repos',
-  headers: {
-    'User-Agent': 'dti-cli'
-  }
-}, function (err, res, body) {
+    var templates = dirs.map( function (dir) {
+      return require(src + dir + '\\package.json')
+    })
+
+    done (err, templates)
+  })
+}
+
+request('G:\\Desenvolvimento\\Template\\', function (err, repositories) {
   if (err) logger.fatal(err)
-  var requestBody = JSON.parse(body)
-  if (Array.isArray(requestBody)) {
-    var repositories = requestBody.filter(function(repo){
+
+  if (Array.isArray(repositories)) {
+    var repositories = repositories.filter(function(repo){
       return (repo.name.indexOf('-template') > -1) 
     })
 
@@ -38,7 +46,8 @@ request({
         console.log(
           '  ' + chalk.yellow('●') +
           '  ' + chalk.blue(repo.name) +
-          ' - ' + (repo.description || 'Without description' ))
+          ' - ' + (repo.description || 'Without description' ) +
+          ' (' + repo.version + ')')
       })
     } else {
       console.log( 'Empty repositories')
