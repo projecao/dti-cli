@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+var packageConfig = require('../package.json')
+var logger = require('../lib/logger')
+var request = require('request')
+var chalk = require('chalk')
+
+/**
+ * Padding.
+ */
+
+console.log()
+process.on('exit', function () {
+  console.log()
+})
+
+/**
+ * List repos.
+ */
+
+request({
+  url: 'https://api.github.com/users/' + packageConfig.git.user + '/repos',
+  headers: {
+    'User-Agent': 'dti-cli'
+  }
+}, function (err, res, body) {
+  if (err) logger.fatal(err)
+  var requestBody = JSON.parse(body)
+  if (Array.isArray(requestBody)) {
+    var repositories = requestBody.filter(function(repo){
+      return (repo.name.indexOf('-template') > -1) 
+    })
+
+    if(repositories.length) {
+      console.log('  Available official templates:')
+      console.log()
+      repositories.forEach(function (repo) {
+        console.log(
+          '  ' + chalk.yellow('●') +
+          '  ' + chalk.blue(repo.name) +
+          ' - ' + (repo.description || 'Without description' ))
+      })
+    } else {
+      console.log( 'Empty repositories')
+    }
+
+  } else {
+    console.error(requestBody.message)
+  }
+})
