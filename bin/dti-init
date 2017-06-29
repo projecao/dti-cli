@@ -107,18 +107,13 @@ if (exists(to)) {
 function run () {
 
   checkVersion(function () {
-    
-    var spinner = ora('downloading template from DTI')
-    spinner.start()
 
     // use official templates
-    var officialTemplate = 'file:\\gates\\DTI\\Desenvolvimento\\' + template
+    var officialTemplate = 'G:\\Desenvolvimento\\Template\\' + template
     var templatePath = getTemplatePath(officialTemplate)
 
-    console.log( templatePath )
     if (exists(templatePath)) {
       generate(name, templatePath, to, function (err) {
-        spinner.stop()
         if (err) logger.fatal(err)
         console.log()
         logger.success('Generated "%s".', name)
