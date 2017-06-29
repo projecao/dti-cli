@@ -68,7 +68,7 @@ var clone = program.clone || false
 
 var tmp = path.join(
   home, '.dti-templates', 
-  template.replace(/\//g, '-').replace('bitbucket:', '')
+  template.replace(/\//g, '-').replace('github:', '')
 )
 
 if (program.offline) {
