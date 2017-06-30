@@ -109,7 +109,7 @@ function run () {
   checkVersion(function () {
 
     // use official templates
-    var officialTemplate = 'G:\\Desenvolvimento\\Template\\' + template
+    var officialTemplate = packageConfig.templates.src + template
     var templatePath = getTemplatePath(officialTemplate)
 
     if (exists(templatePath)) {

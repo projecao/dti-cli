@@ -24,14 +24,14 @@ function request (src, done) {
     var dirs = files.filter(file => fs.lstatSync(path.join(src, file)).isDirectory())
 
     var templates = dirs.map( function (dir) {
-      return require(src + dir + '\\package.json')
+      return require(src + dir + '/package.json')
     })
 
     done (err, templates)
   })
 }
 
-request('G:\\Desenvolvimento\\Template\\', function (err, repositories) {
+request(packageConfig.templates.src, function (err, repositories) {
   if (err) logger.fatal(err)
 
   if (Array.isArray(repositories)) {
