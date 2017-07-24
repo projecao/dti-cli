@@ -36,10 +36,7 @@ program.on('--help', function () {
   console.log('  Examples:')
   console.log()
   console.log(chalk.gray('    # create a new project with an official template'))
-  console.log('    $ dti init webpack my-project')
-  console.log()
-  console.log(chalk.gray('    # create a new project straight from a github template'))
-  console.log('    $ dti init username/repo my-project')
+  console.log('    $ dti init spa-template my-project')
   console.log()
 })
 
