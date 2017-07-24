@@ -17,7 +17,7 @@ var CopyPlugin = require('copy-webpack-plugin')
 var tildify = require('tildify')
 var loaders = require('vue-cli/lib/loaders')
 var logger = require('../lib/logger')
-var run = require('../lib/run')
+var run = require('vue-cli/lib/run')
 
 /**
  * Usage.
