@@ -24,7 +24,7 @@ function request (src, done) {
     var dirs = files.filter(file => fs.lstatSync(path.join(src, file)).isDirectory())
 
     var templates = dirs.map( function (dir) {
-      return require(src + dir + '/package.json')
+      return require(src + dir + '/meta.js')
     })
 
     done (err, templates)
@@ -36,7 +36,7 @@ request(packageConfig.templates.src, function (err, repositories) {
 
   if (Array.isArray(repositories)) {
     var repositories = repositories.filter(function(repo){
-      return (repo.name.indexOf('-template') > -1) 
+      return /.+\-template$/.test(repo.name)
     })
 
     if(repositories.length) {

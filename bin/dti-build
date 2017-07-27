@@ -25,24 +25,30 @@ var run = require('vue-cli/lib/run')
 
 program
   .usage('[entry]')
-  .option('--dist [directory]', 'Output directory for bundled files')
-  .option('--port [port]', 'Server port')
-  .option('--host [host]', 'Server host', 'localhost')
-  .option('--prod, --production', 'Build for production')
-  .option('-w, --watch', 'Run in watch mode')
-  .option('-m, --mount', 'Auto-create app instance from given component, true for `.ng` file')
-  .option('-c, --config [file]', 'Use custom config file')
-  .option('--wp, --webpack [file]', 'Use custom webpack config file')
-  .option('--disable-config', 'You do not want to use config file')
-  .option('--disable-webpack-config', 'You do not want to use webpack config file')
-  .option('-o, --open', 'Open browser')
-  .option('--proxy [url]', 'Proxy API request')
-  .option('--lib [libraryName]', 'Distribute component in UMD format')
-  .option('--disable-compress', 'Disable compress when building in production mode')
+  .option('--dist [directory]', 'Diretório de saída para arquivos empacotados')
+  .option('--port [port]', 'Porta do Servidor')
+  .option('--host [host]', 'Host do Servidor', 'localhost')
+
+  .option('--prod, --production', 'Construir para Produção')
+  .option('--hom, --homologation', 'Construir para Produção')
+  .option('--trei, --training', 'Construir para Produção')
+
+  .option('-w, --watch', 'Rodar em modo watch')
+  .option('-c, --config [file]', 'Usar arquivo de configuração customizado')
+  .option('--wp, --webpack [file]', 'Usar arquivo webpack config customizado')
+  .option('--disable-config', 'Você não quer usar o arquivo de configuração padrão')
+  .option('--disable-webpack-config', 'Você não quer usar o arquivo de configuração do webpakc')
+  .option('-o, --open', 'Abrir o brouser')
+  .option('--proxy [url]', 'Proxy re requisiçao API')
+  .option('--disable-compress', 'Desativar compressão ao criar no modo de produção')
   .parse(process.argv)
 
 var args = program.args
 var production = program.production
+
+var envs = {
+
+}
 
 process.env.NODE_ENV = production ? 'production' : 'development'
 
@@ -63,7 +69,8 @@ if (!program.disableConfig) {
 var options = merge({
   port: 4000,
   dist: 'dist',
-  host: 'localhost'
+  host: 'localhost',
+  entry: './src/main.js'
 }, localConfig, {
   entry: args[0],
   config: program.config,
@@ -80,6 +87,11 @@ var options = merge({
   watch: program.watch,
   disableCompress: program.disableCompress
 })
+
+console.log(options)
+
+process.exit
+return
 
 function help () {
   if (!options.config && !options.entry) {
